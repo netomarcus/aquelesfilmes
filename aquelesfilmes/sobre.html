@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre — Aqueles Filmes</title>
+  <meta name="description" content="Aqueles Filmes é uma produtora audiovisual sediada em Brumadinho e Belo Horizonte, MG.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 64px;
+      align-items: start;
+      margin-bottom: 72px;
+    }
+
+    .about-left h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+
+    .about-left h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-key {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .stat-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--gold);
+    }
+
+    .about-right p {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 2.2;
+      margin-bottom: 22px;
+      letter-spacing: 0.03em;
+    }
+
+    /* diretor */
+    .diretor-section {
+      border-top: 1px solid var(--border);
+      padding-top: 52px;
+      margin-bottom: 72px;
+    }
+
+    .diretor-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      align-items: start;
+      margin-top: 36px;
+    }
+
+    .diretor-foto {
+      aspect-ratio: 3/4;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* troca por: <img src="images/diretor.jpg" alt="Marcus Neto"> */
+    .diretor-foto img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .foto-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .foto-placeholder span {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      font-style: italic;
+      color: var(--border2);
+    }
+
+    .diretor-info h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .diretor-info .cargo {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .diretor-info p {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 2.2;
+      margin-bottom: 18px;
+    }
+
+    /* parceiros */
+    .parceiros {
+      border-top: 1px solid var(--border);
+      padding-top: 52px;
+    }
+
+    .parceiros-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      margin-top: 36px;
+    }
+
+    .parceiro {
+      background: var(--bg);
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .parceiro-nome {
+      font-size: 10px;
+      color: var(--text-faint);
+      letter-spacing: 0.12em;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 700px) {
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .diretor-grid { grid-template-columns: 1fr; }
+      .diretor-foto { aspect-ratio: 1/1; max-width: 240px; }
+      .parceiros-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo"><em>aqueles</em> filmes</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">início</a></li>
+    <li><a href="sobre.html" class="active">sobre</a></li>
+    <li><a href="filmes.html">filmes</a></li>
+    <li><a href="imagens.html">imagens</a></li>
+    <li><a href="contato.html">contato</a></li>
+  </ul>
+</nav>
+
+<main>
+  <p class="section-label">A produtora</p>
+
+  <div class="about-grid">
+    <div class="about-left">
+      <h1>Cinema como<br>forma de<br><em>escavar o real</em></h1>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-key">Fundação</span>
+          <span class="stat-val">2013</span>
+        </div>
+        <div class="stat">
+          <span class="stat-key">Sede</span>
+          <span class="stat-val">Brumadinho, MG</span>
+        </div>
+        <div class="stat">
+          <span class="stat-key">Filmes</span>
+          <span class="stat-val">Curtas e longas</span>
+        </div>
+        <div class="stat">
+          <span class="stat-key">Fomento</span>
+          <span class="stat-val">Nacional e internacional</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-right">
+      <p>Aqueles Filmes é uma produtora audiovisual sediada em Brumadinho e Belo Horizonte, Minas Gerais. Desenvolvemos projetos de ficção de autor que investigam território, memória histórica e as contradições do Brasil contemporâneo.</p>
+      <p>Nossos filmes transitam entre gêneros — noir, horror, drama histórico — sem perder o compromisso com a especificidade do real. Cada projeto nasce de uma necessidade de escavar o que está enterrado.</p>
+      <p>Trabalhamos em coprodução nacional e internacional, com experiência em mecanismos de fomento público — Lei Paulo Gustavo, Secult-MG, PNAB — e fundos internacionais como o World Cinema Fund e o Hubert Bals Fund.</p>
+      <!-- adicione mais parágrafos aqui conforme necessário -->
+    </div>
+  </div>
+
+  <!-- DIRETOR -->
+  <div class="diretor-section">
+    <p class="section-label">Direção</p>
+    <div class="diretor-grid">
+      <div class="diretor-foto">
+        <!-- SUBSTITUA o bloco abaixo por:
+             <img src="images/diretor.jpg" alt="Marcus Neto">
+             quando tiver a foto pronta -->
+        <div class="foto-placeholder">
+          <span>M</span>
+        </div>
+      </div>
+      <div class="diretor-info">
+        <h2>Marcus Neto</h2>
+        <p class="cargo">Diretor · Roteirista</p>
+        <p>Marcus Neto é cineasta, diretor e roteirista radicado em Brumadinho, Minas Gerais. Fundou a Aqueles Filmes em 2013 com o objetivo de desenvolver cinema de autor enraizado no território e na memória do Brasil central.</p>
+        <p>Seu trabalho inclui o curta-metragem <em>Paladino</em> e o longa <em>Levantados do Chão</em>, além de projetos em desenvolvimento como <em>Os Cavouqueiros</em> (1915, Fecho do Funil) e <em>O Menino nas Sombras</em>.</p>
+        <p><!-- adicione prêmios, festivais, formação aqui --></p>
+        <a href="contato.html" class="btn" style="margin-top:12px;">Entrar em contato →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARCEIROS / FINANCIADORES -->
+  <div class="parceiros">
+    <p class="section-label">Fomento e parceiros</p>
+    <div class="parceiros-grid">
+      <div class="parceiro"><span class="parceiro-nome">Lei Paulo Gustavo</span></div>
+      <div class="parceiro"><span class="parceiro-nome">Secult-MG</span></div>
+      <div class="parceiro"><span class="parceiro-nome">PNAB</span></div>
+      <div class="parceiro"><span class="parceiro-nome">World Cinema Fund</span></div>
+      <!-- adicione mais blocos conforme necessário -->
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>© 2025 Aqueles Filmes</span>
+  <span>Brumadinho · Belo Horizonte · MG</span>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+  }
+</script>
+</body>
+</html>

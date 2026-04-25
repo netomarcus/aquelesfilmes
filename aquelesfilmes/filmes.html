@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filmes — Aqueles Filmes</title>
+  <meta name="description" content="Filmografia da Aqueles Filmes — curtas e longas-metragens de ficção de autor.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .filme-block {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 52px;
+      align-items: start;
+      padding-bottom: 56px;
+      margin-bottom: 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filme-block:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .filme-thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* substitua o placeholder por:
+       <img src="images/filme-levantados.jpg" alt="Levantados do Chão"> */
+    .filme-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb-letra {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px;
+      font-style: italic;
+      color: var(--border2);
+      user-select: none;
+    }
+
+    /* botão de play para trailer (iframe do YouTube) */
+    .trailer-btn {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0);
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .trailer-btn:hover { background: rgba(0,0,0,0.4); }
+
+    .play-circle {
+      width: 52px;
+      height: 52px;
+      border: 1px solid rgba(200,180,130,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .trailer-btn:hover .play-circle { opacity: 1; }
+
+    .play-tri {
+      width: 0; height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 14px solid var(--gold);
+      margin-left: 4px;
+    }
+
+    /* modal iframe */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-inner {
+      width: min(860px, 94vw);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -36px;
+      right: 0;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+    }
+
+    .modal-close:hover { color: var(--text); }
+
+    .modal-video {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+    }
+
+    .modal-video iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* info */
+    .filme-info { padding-top: 4px; }
+
+    .filme-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid var(--border2);
+      color: var(--text-faint);
+    }
+
+    .badge.lancado { border-color: #1a2a1a; color: #4a7a4a; }
+    .badge.dev { border-color: #2a2010; color: var(--gold); }
+    .badge.pos { border-color: #10202a; color: #4a7aaa; }
+
+    .filme-ano {
+      font-size: 9px;
+      color: var(--text-faint);
+      letter-spacing: 0.15em;
+    }
+
+    .filme-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 6px;
+      line-height: 1.15;
+    }
+
+    .filme-title em { font-style: italic; color: var(--gold); }
+
+    .filme-genero {
+      font-size: 9px;
+      color: var(--gold-dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .filme-sinopse {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 2.2;
+      margin-bottom: 24px;
+    }
+
+    .filme-ficha {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .ficha-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ficha-key {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 3px;
+    }
+
+    .ficha-val {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 860px) {
+      .filme-block { grid-template-columns: 1fr; gap: 28px; }
+      .filme-thumb { max-width: 100%; }
+      .filme-ficha { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo"><em>aqueles</em> filmes</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">início</a></li>
+    <li><a href="sobre.html">sobre</a></li>
+    <li><a href="filmes.html" class="active">filmes</a></li>
+    <li><a href="imagens.html">imagens</a></li>
+    <li><a href="contato.html">contato</a></li>
+  </ul>
+</nav>
+
+<main>
+  <p class="section-label">Filmografia</p>
+
+  <!-- ═══════════════════════════════════════════
+       FILME 1 — LEVANTADOS DO CHÃO
+       ═══════════════════════════════════════════ -->
+  <div class="filme-block">
+    <div>
+      <div class="filme-thumb">
+        <!-- SUBSTITUA por: <img src="images/levantados-thumb.jpg" alt="Levantados do Chão"> -->
+        <span class="thumb-letra">L</span>
+        <!-- PARA ATIVAR O TRAILER:
+             1. Cole o ID do vídeo do YouTube no atributo data-yt abaixo
+             2. Exemplo: data-yt="dQw4w9WgXcQ" -->
+        <button class="trailer-btn" data-yt="" onclick="abreTrailer(this)">
+          <div class="play-circle"><div class="play-tri"></div></div>
+        </button>
+      </div>
+    </div>
+    <div class="filme-info">
+      <div class="filme-meta">
+        <span class="badge lancado">Lançado</span>
+        <span class="filme-ano">2024</span>
+      </div>
+      <h2 class="filme-title">Levantados do Chão</h2>
+      <p class="filme-genero">Longa-metragem · Ficção · Noir · Horror</p>
+      <p class="filme-sinopse">
+        <!-- escreva sua sinopse aqui -->
+        Dois rivais de motocross e as entidades que emergem de uma mina abandonada. Com o desastre de Brumadinho como pano de fundo, o filme investiga o que a terra guarda e o que ela devolve.
+      </p>
+      <div class="filme-ficha">
+        <div class="ficha-item">
+          <div class="ficha-key">Direção</div>
+          <div class="ficha-val">Marcus Neto</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Duração</div>
+          <div class="ficha-val"><!-- ex: 94 min --></div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Produção</div>
+          <div class="ficha-val">Aqueles Filmes</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Coprodução</div>
+          <div class="ficha-val"><!-- país/produtora --></div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Fomento</div>
+          <div class="ficha-val"><!-- editais --></div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Festivais</div>
+          <div class="ficha-val"><!-- liste aqui --></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       FILME 2 — PALADINO
+       ═══════════════════════════════════════════ -->
+  <div class="filme-block">
+    <div>
+      <div class="filme-thumb">
+        <span class="thumb-letra">P</span>
+        <button class="trailer-btn" data-yt="" onclick="abreTrailer(this)">
+          <div class="play-circle"><div class="play-tri"></div></div>
+        </button>
+      </div>
+    </div>
+    <div class="filme-info">
+      <div class="filme-meta">
+        <span class="badge lancado">Lançado</span>
+        <span class="filme-ano">2023</span>
+      </div>
+      <h2 class="filme-title">Paladino</h2>
+      <p class="filme-genero">Curta-metragem · Horror</p>
+      <p class="filme-sinopse">
+        <!-- escreva sua sinopse aqui -->
+      </p>
+      <div class="filme-ficha">
+        <div class="ficha-item">
+          <div class="ficha-key">Direção</div>
+          <div class="ficha-val">Marcus Neto</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Duração</div>
+          <div class="ficha-val"><!-- ex: 18 min --></div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Produção</div>
+          <div class="ficha-val">Aqueles Filmes</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Fomento</div>
+          <div class="ficha-val">Lei Paulo Gustavo / BH Nas Telas</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Festivais</div>
+          <div class="ficha-val"><!-- liste aqui --></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       FILME 3 — OS CAVOUQUEIROS
+       ═══════════════════════════════════════════ -->
+  <div class="filme-block">
+    <div>
+      <div class="filme-thumb">
+        <span class="thumb-letra">C</span>
+        <!-- sem trailer ainda, remova o botão quando não tiver vídeo -->
+      </div>
+    </div>
+    <div class="filme-info">
+      <div class="filme-meta">
+        <span class="badge dev">Em desenvolvimento</span>
+        <span class="filme-ano">—</span>
+      </div>
+      <h2 class="filme-title">Os Cavouqueiros</h2>
+      <p class="filme-genero">Longa-metragem · Ficção histórica · Queer</p>
+      <p class="filme-sinopse">
+        Minas Gerais, 1915. Na construção de uma ferrovia pelo cânion do Fecho do Funil, trabalhadores marginalizados constroem laços que a história tentou soterrar. Um romance queer em meio ao trabalho braçal e à violência do progresso.
+      </p>
+      <div class="filme-ficha">
+        <div class="ficha-item">
+          <div class="ficha-key">Direção</div>
+          <div class="ficha-val">Marcus Neto</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Roteiro</div>
+          <div class="ficha-val">Marcus Neto</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Produção</div>
+          <div class="ficha-val">A Grade / Aqueles Filmes</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Fase</div>
+          <div class="ficha-val">Desenvolvimento / roteiro</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       FILME 4 — O MENINO NAS SOMBRAS
+       ═══════════════════════════════════════════ -->
+  <div class="filme-block">
+    <div>
+      <div class="filme-thumb">
+        <span class="thumb-letra">M</span>
+      </div>
+    </div>
+    <div class="filme-info">
+      <div class="filme-meta">
+        <span class="badge dev">Em desenvolvimento</span>
+        <span class="filme-ano">—</span>
+      </div>
+      <h2 class="filme-title">O Menino nas Sombras</h2>
+      <p class="filme-genero">Longa-metragem · Ficção · Drama</p>
+      <p class="filme-sinopse">
+        São Paulo. Um menino indocumentado nasce invisível em uma mansão em decadência. Quando o imóvel muda de mãos, dois mundos colidem — o dos que não são vistos e o dos que preferem não ver.
+      </p>
+      <div class="filme-ficha">
+        <div class="ficha-item">
+          <div class="ficha-key">Direção</div>
+          <div class="ficha-val">Marcus Neto</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Produção</div>
+          <div class="ficha-val">Aqueles Filmes</div>
+        </div>
+        <div class="ficha-item">
+          <div class="ficha-key">Fase</div>
+          <div class="ficha-val">Desenvolvimento / HBF</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL TRAILER -->
+<div class="modal-overlay" id="modal" onclick="fechaTrailer(event)">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="fechaTrailer()">← fechar</button>
+    <div class="modal-video">
+      <iframe id="modal-iframe" src="" allowfullscreen allow="autoplay"></iframe>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 Aqueles Filmes</span>
+  <span>Brumadinho · Belo Horizonte · MG</span>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+  }
+
+  function abreTrailer(btn) {
+    const ytId = btn.getAttribute('data-yt');
+    if (!ytId) return; // sem trailer ainda
+    document.getElementById('modal-iframe').src =
+      'https://www.youtube.com/embed/' + ytId + '?autoplay=1';
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fechaTrailer(e) {
+    if (e && e.target !== document.getElementById('modal')) return;
+    document.getElementById('modal-iframe').src = '';
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') fechaTrailer();
+  });
+</script>
+</body>
+</html>

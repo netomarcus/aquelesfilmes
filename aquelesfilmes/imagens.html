@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imagens — Aqueles Filmes</title>
+  <meta name="description" content="Stills e fotos de produção — Aqueles Filmes.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+
+    /* filtros */
+    .filtros {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .filtro {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border: 1px solid var(--border2);
+      color: var(--text-faint);
+      background: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filtro:hover { border-color: #444; color: var(--text-dim); }
+    .filtro.active { border-color: var(--gold-dim); color: var(--gold); }
+
+    /* grid */
+    .gallery {
+      columns: 3;
+      column-gap: 6px;
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 6px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      display: block;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    /* placeholder quando não tem imagem */
+    .gallery-item .ph {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .gallery-item:hover .ph { border-color: #333; }
+
+    .ph-icon {
+      font-size: 24px;
+      color: var(--border2);
+    }
+
+    .ph-label {
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #222;
+    }
+
+    /* overlay hover */
+    .gallery-item .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0);
+      display: flex;
+      align-items: flex-end;
+      padding: 14px;
+      transition: background 0.2s;
+    }
+
+    .gallery-item:hover .overlay { background: rgba(0,0,0,0.45); }
+
+    .overlay-label {
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .gallery-item:hover .overlay-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 82vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .lb-caption {
+      font-size: 10px;
+      color: var(--text-faint);
+      letter-spacing: 0.15em;
+      margin-top: 16px;
+    }
+
+    .lb-close {
+      position: absolute;
+      top: 24px; right: 32px;
+      background: none;
+      border: none;
+      color: var(--text-faint);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+    }
+
+    .lb-close:hover { color: var(--text); }
+
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-faint);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      padding: 16px;
+    }
+
+    .lb-nav:hover { color: var(--text); }
+    .lb-prev { left: 16px; }
+    .lb-next { right: 16px; }
+
+    /* instrução de upload */
+    .upload-hint {
+      margin-top: 48px;
+      padding: 24px;
+      border: 1px dashed var(--border2);
+      font-size: 10px;
+      color: var(--text-faint);
+      line-height: 2;
+      letter-spacing: 0.05em;
+    }
+
+    .upload-hint strong { color: var(--gold-dim); }
+
+    @media (max-width: 700px) {
+      .gallery { columns: 2; }
+    }
+
+    @media (max-width: 420px) {
+      .gallery { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo"><em>aqueles</em> filmes</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html">início</a></li>
+    <li><a href="sobre.html">sobre</a></li>
+    <li><a href="filmes.html">filmes</a></li>
+    <li><a href="imagens.html" class="active">imagens</a></li>
+    <li><a href="contato.html">contato</a></li>
+  </ul>
+</nav>
+
+<main>
+  <p class="section-label">Imagens</p>
+
+  <!-- filtros por projeto -->
+  <div class="filtros">
+    <button class="filtro active" data-filtro="todos" onclick="filtra(this)">Todos</button>
+    <button class="filtro" data-filtro="levantados" onclick="filtra(this)">Levantados do Chão</button>
+    <button class="filtro" data-filtro="paladino" onclick="filtra(this)">Paladino</button>
+    <button class="filtro" data-filtro="cavouqueiros" onclick="filtra(this)">Os Cavouqueiros</button>
+  </div>
+
+  <!--
+    ═══════════════════════════════════════════════════════
+    COMO ADICIONAR IMAGENS:
+
+    Troque cada bloco abaixo por:
+
+    <div class="gallery-item" data-projeto="levantados" onclick="abreLb(this)">
+      <img src="images/levantados-01.jpg" alt="Levantados do Chão — still 01"
+           data-caption="Levantados do Chão, 2024">
+      <div class="overlay"><span class="overlay-label">Levantados do Chão</span></div>
+    </div>
+
+    Coloque as imagens na pasta /images/
+    ═══════════════════════════════════════════════════════
+  -->
+
+  <div class="gallery" id="gallery">
+
+    <!-- LEVANTADOS DO CHÃO -->
+    <div class="gallery-item" data-projeto="levantados" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:3/4"><span class="ph-icon">+</span><span class="ph-label">levantados — still 01</span></div>
+      <div class="overlay"><span class="overlay-label">Levantados do Chão</span></div>
+    </div>
+    <div class="gallery-item" data-projeto="levantados" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:16/9"><span class="ph-icon">+</span><span class="ph-label">levantados — still 02</span></div>
+      <div class="overlay"><span class="overlay-label">Levantados do Chão</span></div>
+    </div>
+    <div class="gallery-item" data-projeto="levantados" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:4/3"><span class="ph-icon">+</span><span class="ph-label">levantados — still 03</span></div>
+      <div class="overlay"><span class="overlay-label">Levantados do Chão</span></div>
+    </div>
+    <div class="gallery-item" data-projeto="levantados" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:2/3"><span class="ph-icon">+</span><span class="ph-label">levantados — still 04</span></div>
+      <div class="overlay"><span class="overlay-label">Levantados do Chão</span></div>
+    </div>
+
+    <!-- PALADINO -->
+    <div class="gallery-item" data-projeto="paladino" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:16/9"><span class="ph-icon">+</span><span class="ph-label">paladino — still 01</span></div>
+      <div class="overlay"><span class="overlay-label">Paladino</span></div>
+    </div>
+    <div class="gallery-item" data-projeto="paladino" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:3/4"><span class="ph-icon">+</span><span class="ph-label">paladino — still 02</span></div>
+      <div class="overlay"><span class="overlay-label">Paladino</span></div>
+    </div>
+    <div class="gallery-item" data-projeto="paladino" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:4/3"><span class="ph-icon">+</span><span class="ph-label">paladino — still 03</span></div>
+      <div class="overlay"><span class="overlay-label">Paladino</span></div>
+    </div>
+
+    <!-- OS CAVOUQUEIROS -->
+    <div class="gallery-item" data-projeto="cavouqueiros" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:4/3"><span class="ph-icon">+</span><span class="ph-label">cavouqueiros — still 01</span></div>
+      <div class="overlay"><span class="overlay-label">Os Cavouqueiros</span></div>
+    </div>
+    <div class="gallery-item" data-projeto="cavouqueiros" onclick="abreLb(this)">
+      <div class="ph" style="aspect-ratio:2/3"><span class="ph-icon">+</span><span class="ph-label">cavouqueiros — still 02</span></div>
+      <div class="overlay"><span class="overlay-label">Os Cavouqueiros</span></div>
+    </div>
+
+  </div><!-- /gallery -->
+
+  <div class="upload-hint">
+    <strong>Para adicionar fotos:</strong> coloque os arquivos JPG na pasta <code>images/</code> e substitua cada bloco
+    <code>&lt;div class="ph"&gt;</code> por uma tag <code>&lt;img src="images/nome.jpg"&gt;</code>.<br>
+    Tamanho recomendado: máximo 1800px de largura, JPG com qualidade 80. Isso mantém o site leve.
+  </div>
+
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="fechaLb(event)">
+  <button class="lb-close" onclick="fechaLb()">← fechar</button>
+  <button class="lb-nav lb-prev" onclick="navLb(-1)">←</button>
+  <img id="lb-img" src="" alt="">
+  <p class="lb-caption" id="lb-caption"></p>
+  <button class="lb-nav lb-next" onclick="navLb(1)">→</button>
+</div>
+
+<footer>
+  <span>© 2025 Aqueles Filmes</span>
+  <span>Brumadinho · Belo Horizonte · MG</span>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+  }
+
+  // ── FILTRO ──
+  function filtra(btn) {
+    document.querySelectorAll('.filtro').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filtro;
+    document.querySelectorAll('.gallery-item').forEach(item => {
+      item.style.display = (f === 'todos' || item.dataset.projeto === f) ? 'block' : 'none';
+    });
+  }
+
+  // ── LIGHTBOX ──
+  let lbItems = [];
+  let lbIdx = 0;
+
+  function abreLb(el) {
+    const img = el.querySelector('img');
+    if (!img) return; // placeholder sem imagem real
+    lbItems = Array.from(document.querySelectorAll('.gallery-item'))
+      .filter(i => i.style.display !== 'none' && i.querySelector('img'));
+    lbIdx = lbItems.indexOf(el);
+    mostraLb();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function mostraLb() {
+    const el = lbItems[lbIdx];
+    const img = el.querySelector('img');
+    document.getElementById('lb-img').src = img.src;
+    document.getElementById('lb-img').alt = img.alt;
+    document.getElementById('lb-caption').textContent = img.dataset.caption || '';
+  }
+
+  function navLb(dir) {
+    lbIdx = (lbIdx + dir + lbItems.length) % lbItems.length;
+    mostraLb();
+  }
+
+  function fechaLb(e) {
+    if (e && e.target !== document.getElementById('lightbox')) return;
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'ArrowRight') navLb(1);
+    if (e.key === 'ArrowLeft') navLb(-1);
+    if (e.key === 'Escape') fechaLb();
+  });
+</script>
+</body>
+</html>
