@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aqueles Filmes — Produtora de Cinema</title>
+  <meta name="description" content="Aqueles Filmes é uma produtora audiovisual sediada em Brumadinho e Belo Horizonte, MG. Cinema de autor, ficção, memória e território.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { overflow-x: hidden; }
+
+    /* hero */
+    .hero {
+      min-height: calc(100vh - 65px);
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+    }
+
+    /* troca essa imagem pela foto de still do filme quando tiver */
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      background-image: url('images/hero.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.18;
+      transition: opacity 1s;
+    }
+
+    .hero-vline {
+      position: absolute;
+      top: 0; left: 55%;
+      width: 1px;
+      height: 100%;
+      background: var(--border);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 60px 48px;
+      max-width: 600px;
+      animation: fadeUp 1s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 7vw, 72px);
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--text);
+      margin-bottom: 22px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      line-height: 2;
+      margin-bottom: 36px;
+    }
+
+    /* destaques */
+    .destaques {
+      padding: 64px 48px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-top: 1px solid var(--border);
+    }
+
+    .destaque {
+      background: var(--bg);
+      padding: 36px 32px;
+      text-decoration: none;
+      display: block;
+      transition: background 0.2s;
+    }
+
+    .destaque:hover { background: var(--bg2); }
+
+    .destaque-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--gold-dim);
+      opacity: 0.4;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .destaque-label {
+      font-size: 8px;
+      letter-spacing: 0.25em;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .destaque-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    @media (max-width: 700px) {
+      .hero-content { padding: 40px 24px; }
+      .hero-vline { display: none; }
+      .destaques { grid-template-columns: 1fr; padding: 0; }
+      .destaque { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo"><em>aqueles</em> filmes</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="index.html" class="active">início</a></li>
+    <li><a href="sobre.html">sobre</a></li>
+    <li><a href="filmes.html">filmes</a></li>
+    <li><a href="imagens.html">imagens</a></li>
+    <li><a href="contato.html">contato</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <!-- coloque uma foto de still em images/hero.jpg -->
+  <div class="hero-img"></div>
+  <div class="hero-vline"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Brumadinho · Belo Horizonte · MG</p>
+    <h1 class="hero-title"><em>Aqueles</em><br>filmes<br>que ficam</h1>
+    <p class="hero-sub">Produtora de cinema de autor.<br>Ficção, memória e território.</p>
+    <a href="filmes.html" class="btn">Ver filmes →</a>
+  </div>
+</section>
+
+<section class="destaques">
+  <a href="filmes.html" class="destaque">
+    <div class="destaque-num">01</div>
+    <div class="destaque-label">Em cartaz</div>
+    <div class="destaque-title">Levantados do Chão</div>
+  </a>
+  <a href="filmes.html" class="destaque">
+    <div class="destaque-num">02</div>
+    <div class="destaque-label">Em desenvolvimento</div>
+    <div class="destaque-title">Os Cavouqueiros</div>
+  </a>
+  <a href="sobre.html" class="destaque">
+    <div class="destaque-num">03</div>
+    <div class="destaque-label">A produtora</div>
+    <div class="destaque-title">Quem somos</div>
+  </a>
+</section>
+
+<footer>
+  <span>© 2025 Aqueles Filmes</span>
+  <span>Brumadinho · Belo Horizonte · MG</span>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('nav-links').classList.toggle('open');
+  }
+</script>
+</body>
+</html>

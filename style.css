@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --gold: #9a8a6a;
+  --gold-dim: #6a5a3a;
+  --bg: #0a0a0a;
+  --bg2: #0e0e0e;
+  --bg3: #141414;
+  --text: #e8e0d0;
+  --text-dim: #777;
+  --text-faint: #444;
+  --border: #1e1e1e;
+  --border2: #2a2a2a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Space Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── NAV ─── */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 48px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,10,0.96);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+}
+
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: var(--text);
+  text-decoration: none;
+  text-transform: lowercase;
+}
+
+.logo em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-faint);
+  text-decoration: none;
+  letter-spacing: 0.18em;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding: 18px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer span {
+  font-size: 9px;
+  color: #2a2a2a;
+  letter-spacing: 0.12em;
+}
+
+/* ─── MAIN ─── */
+main {
+  flex: 1;
+  padding: 52px 48px;
+}
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-block;
+  border: 1px solid #333;
+  color: var(--text);
+  padding: 11px 22px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: transparent;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ─── HAMBURGER (mobile) ─── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--text-dim);
+}
+
+/* ─── MOBILE ─── */
+@media (max-width: 700px) {
+  nav { padding: 18px 24px; }
+  main { padding: 36px 24px; }
+  footer { padding: 16px 24px; flex-direction: column; gap: 6px; text-align: center; }
+
+  .hamburger { display: flex; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    background: var(--bg);
+    flex-direction: column;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-links.open { display: flex; }
+
+  .nav-links a {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: block;
+  }
+}
